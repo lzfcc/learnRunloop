@@ -15,6 +15,7 @@
 		96BD9D26226DE831006EBB01 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 96BD9D25226DE831006EBB01 /* main.m */; };
 		96BD9D30226DE831006EBB01 /* RunloopTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96BD9D2F226DE831006EBB01 /* RunloopTests.m */; };
 		96BD9D3B226DE831006EBB01 /* RunloopUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96BD9D3A226DE831006EBB01 /* RunloopUITests.m */; };
+		96BD9D4A226DE944006EBB01 /* NSRunLoop+Hook.m in Sources */ = {isa = PBXBuildFile; fileRef = 96BD9D49226DE944006EBB01 /* NSRunLoop+Hook.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		96BD9D36226DE831006EBB01 /* RunloopUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunloopUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BD9D3A226DE831006EBB01 /* RunloopUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RunloopUITests.m; sourceTree = "<group>"; };
 		96BD9D3C226DE831006EBB01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96BD9D48226DE944006EBB01 /* NSRunLoop+Hook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSRunLoop+Hook.h"; sourceTree = "<group>"; };
+		96BD9D49226DE944006EBB01 /* NSRunLoop+Hook.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSRunLoop+Hook.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +109,8 @@
 				96BD9D19226DE82F006EBB01 /* ViewController.h */,
 				96BD9D1A226DE82F006EBB01 /* ViewController.m */,
 				96BD9D1C226DE82F006EBB01 /* Main.storyboard */,
+				96BD9D48226DE944006EBB01 /* NSRunLoop+Hook.h */,
+				96BD9D49226DE944006EBB01 /* NSRunLoop+Hook.m */,
 				96BD9D1F226DE831006EBB01 /* Assets.xcassets */,
 				96BD9D21226DE831006EBB01 /* LaunchScreen.storyboard */,
 				96BD9D24226DE831006EBB01 /* Info.plist */,
@@ -265,6 +270,7 @@
 				96BD9D1B226DE82F006EBB01 /* ViewController.m in Sources */,
 				96BD9D26226DE831006EBB01 /* main.m in Sources */,
 				96BD9D18226DE82F006EBB01 /* AppDelegate.m in Sources */,
+				96BD9D4A226DE944006EBB01 /* NSRunLoop+Hook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
