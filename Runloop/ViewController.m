@@ -17,6 +17,10 @@
 
 @implementation ViewController
 
+/*
+ https://juejin.im/entry/595f832c6fb9a06bc23a9d70
+ */
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -35,21 +39,23 @@
     [_theRL addPort:_port forMode:NSDefaultRunLoopMode];
 
     // 该方法会在当前线程的runloop中创建一个timer，并在当前线程中执行selector
-    [self performSelector:@selector(excuteInNewThread:) withObject:@"🈚️" afterDelay:2];
-    [self performSelector:@selector(excuteInNewThread:) withObject:@"🈶️" afterDelay:3];
+//    [self performSelector:@selector(excuteInNewThread:) withObject:@"🈚️" afterDelay:2];
+//    [self performSelector:@selector(excuteInNewThread:) withObject:@"🈶️" afterDelay:3];
 
     // 注意：这里repeats参数要设为`NO`.
-//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-//        NSLog(@"🌹🌈");
+//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
+//        NSLog(@"㊗️🌹🎉");
 //    }];
-//    // 添加一个定时源
+    // 添加一个定时源
 //    [_theRL addTimer:timer forMode:NSDefaultRunLoopMode];
 
+    [_theRL addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
 
+    [self addObserver];
 
-    [_theRL run];
+//    [_theRL run];
 //    [_theRL runUntilDate:[NSDate dateWithTimeInterval:10 sinceDate:[NSDate date]]];  //10s after now
-//    [_theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeInterval:10 sinceDate:[NSDate date]]];
+    [_theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeInterval:10 sinceDate:[NSDate date]]];
 
     NSLog(@"runloop已退出"); //只有当runloop退出，这里才会执行。可以通过注册runloop观察者进行验证，这里就不贴代码了，具体代码请到demo里查看。
 }
@@ -57,7 +63,51 @@
 - (void)excuteInNewThread:(NSString *)param {
     NSLog(@"%@", param);
     // 将当前线程的runloop中的port移除
-    //[_theRL removePort:_port forMode:NSDefaultRunLoopMode];
+//    [_theRL removePort:_port forMode:NSDefaultRunLoopMode];
+
+    // 退出线程是否能够结束runloop？不能
+//    [NSThread exit];
+
+//    CFRunLoopStop(CFRunLoopGetCurrent());
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self performSelector:@selector(communicateToNewThreadFromMainThread) onThread:_thread withObject:nil waitUntilDone:NO];
+}
+
+- (void)communicateToNewThreadFromMainThread {
+    NSLog(@"❓这个有啥用❓%@", [NSThread currentThread]);
+}
+
+- (void)addObserver {
+
+    CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(CFAllocatorGetDefault(), kCFRunLoopAllActivities, YES, 0, ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
+        switch (activity) {
+            case kCFRunLoopEntry:
+                NSLog(@"即将进入runloop");
+                break;
+            case kCFRunLoopBeforeTimers:
+                NSLog(@"即将处理 Timer");
+                break;
+            case kCFRunLoopBeforeSources:
+                NSLog(@"即将处理 Sources");
+                break;
+            case kCFRunLoopBeforeWaiting:
+                NSLog(@"即将进入休眠\n💤💤💤💤💤💤💤💤💤💤💤💤💤");
+                break;
+            case kCFRunLoopAfterWaiting:
+                NSLog(@"从休眠中唤醒loop");
+                break;
+            case kCFRunLoopExit:
+                NSLog(@"即将退出runloop");
+                break;
+
+            default:
+                break;
+        }
+    });
+    CFRunLoopAddObserver(CFRunLoopGetCurrent(), observer, kCFRunLoopDefaultMode);
+    CFRelease(observer);
 }
 
 @end
