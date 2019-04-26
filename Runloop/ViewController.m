@@ -26,10 +26,43 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.title = @"Runloop";
     // Do any additional setup after loading the view, typically from a nib.
+    [self memoryIssue];
+}
 
+- (void)basicUsage {
     _thread = [[NSThread alloc] initWithTarget:self selector:@selector(createRunLoopInNewThread) object:nil];
     [_thread setName:thread_name];
     [_thread start];
+}
+
+- (void)memoryIssue {
+    for (int i = 0; i < 10000; i++) {
+        @autoreleasepool {
+            NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(runThread) object:nil];
+            [thread setName:thread_name];
+            [thread start];
+            [self performSelector:@selector(stopThread) onThread:thread withObject:nil waitUntilDone:YES];
+        }
+    }
+}
+
+- (void)runThread {
+    NSLog(@"current thread = %@", [NSThread currentThread]);
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    static NSMachPort *port;
+    if (!port) {
+        port = [NSMachPort port];
+    }
+    [runLoop addPort:port forMode:NSDefaultRunLoopMode];
+//    CFRunLoopRun();  //和runloop run有什么区别？为什么结果不一样
+    [runLoop run];
+//    [runLoop runMode:NSRunLoopCommonModes beforeDate:[NSDate distantFuture]];
+}
+
+- (void)stopThread {
+    CFRunLoopStop(CFRunLoopGetCurrent());
+    NSThread *thread = [NSThread currentThread];
+    [thread cancel];
 }
 
 - (void)createRunLoopInNewThread {
